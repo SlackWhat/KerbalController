@@ -1,3 +1,4 @@
+// Initialisation of the controls, set all pin modes
 void controlsInit() {
   pinMode(pTHROTTLE, INPUT);
   pinMode(pTX, INPUT);
@@ -44,7 +45,8 @@ void controlsInit() {
   pinMode(dataPin, OUTPUT);
 }
 
-void testLEDS(int testdelay){
+// Blink every LED once to test
+void testLEDS(int testdelay) {
   digitalWrite(pSTAGELED,HIGH);
   delay(testdelay);
   digitalWrite(pSTAGELED,LOW);
@@ -79,7 +81,7 @@ void testLEDS(int testdelay){
   delay(testdelay);
   digitalWrite(pACTION4LED,LOW);
   
-  //prepare the shift register
+  // Prepare the shift register
   digitalWrite(dataPin, LOW);
   digitalWrite(clockPin, LOW);
   digitalWrite(latchPin, LOW);
@@ -91,19 +93,20 @@ void testLEDS(int testdelay){
   inputBytes[4] = B11111111;
   inputBytes[5] = B11111111;
   inputBytes[6] = B11111111;
-  //loop through the input bytes
-  for (int j=0; j<=6; j++){
+  
+  // Loop through the input bytes
+  for (int j=0; j<=6; j++) {
     byte inputByte = inputBytes[j];
     Serial.println(inputByte);
     shiftOut(dataPin, clockPin, MSBFIRST, inputByte);
   }
   
-  //latch the values in when done shifting
+  // Latch the values in when done shifting
   digitalWrite(latchPin, HIGH); 
   
   delay(testdelay);
   
-  //prepare the shift register
+  // Prepare the shift register
   digitalWrite(dataPin, LOW);
   digitalWrite(clockPin, LOW);
   digitalWrite(latchPin, LOW);
@@ -115,13 +118,40 @@ void testLEDS(int testdelay){
   inputBytes[4] = B00000000;
   inputBytes[5] = B00000000;
   inputBytes[6] = B00000000;
-  //loop through the input bytes
-  for (int j=0; j<=6; j++){
+  
+  // Loop through the input bytes
+  for (int j=0; j<=6; j++) {
     byte inputByte = inputBytes[j];
     Serial.println(inputByte);
     shiftOut(dataPin, clockPin, MSBFIRST, inputByte);
   }
   
-  //latch the values in when done shifting
-  digitalWrite(latchPin, HIGH); 
+  // Latch the values in when done shifting
+  digitalWrite(latchPin, HIGH);
+}
+
+// Welcome message on the LCD
+void welcomeMessage() {
+  randomNumber = random(6);
+
+  if (randomNumber == 4 || !digitalRead(pSAS)) {
+    writeLCD("We can always");
+    jumpToLineTwo();
+    writeLCD("  plan a rescue.");
+  }
+  else if (randomNumber == 3 || !digitalRead(pRCS)) {
+    writeLCD("If in doubt, add");
+    jumpToLineTwo();
+    writeLCD("  more boosters.");
+  }
+  else if (randomNumber == 5 || !digitalRead(pLCDx) || !digitalRead(pLCDy) || !digitalRead(pLCDz)) {
+    writeLCD("May the Kraken");
+    jumpToLineTwo();
+    writeLCD("not be in ur way");
+  }
+  else {
+    writeLCD(" KSP Controller");
+    jumpToLineTwo();
+    writeLCD("#   Welcome!   #");
+  }
 }
