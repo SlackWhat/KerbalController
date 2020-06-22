@@ -1,28 +1,31 @@
-void clearLCD ()
-{
-  //clear the LCD by writing all spaces
+// Clear the LCD by writing all spaces
+void clearLCD() {
   jumpToStart();
   mySerial.write("                ");
   mySerial.write("                ");
   jumpToStart();
 }
 
-void jumpToStart ()
-{
-  //jump to the start of the first line on the LCD
+// Jump to the start of the first line on the LCD
+void jumpToStart() {
   mySerial.write(254);
   mySerial.write(128);
 }
 
-void jumpToLineTwo ()
-{
-  //jump to the start of the second line on the LCD
+// Jump to the start of the second line on the LCD
+void jumpToLineTwo() {
+  
   mySerial.write(254);
   mySerial.write(192);
 }
 
-void writeLCD (char myText[])
-{
-  //write text to the LCD
-  mySerial.write(myText); 
+// Write text to the LCD
+void writeLCD(char myText[]) {
+  mySerial.write(myText);
+}
+
+// Change the brightness of the LCD
+void setLCDlight(byte brightness) {
+  mySerial.write(0x7c);         // Prepare the backlight command
+  mySerial.write(brightness);   // Send the brightness value
 }
