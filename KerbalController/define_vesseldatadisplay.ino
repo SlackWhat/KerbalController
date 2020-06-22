@@ -1,3 +1,7 @@
+// ----------------------
+//        TO CHECK
+// ----------------------
+
 //grab info from KSP here (VData object) and write out results to the Arduino pins
 
 //connect to the KSPSerialIO plugin and receive data
@@ -5,7 +9,7 @@ int get_vessel_data() {
   int returnValue = -1;
   now = millis();
 
-  if (KSPBoardReceiveData()){
+  if (KSPBoardReceiveData()) {
     //data is being received
     deadtimeOld = now;
     returnValue = id;
@@ -13,7 +17,7 @@ int get_vessel_data() {
     case 0: //First packet is a handshake packet
       Handshake();
       clearLCD();
-      writeLCD("KerbalController");
+      writeLCD(" KSP Controller ");
       writeLCD("handshake...");
       break;
     case 1:
@@ -31,7 +35,7 @@ int get_vessel_data() {
       deadtimeOld = now;
       Connected = false;
       clearLCD();
-      writeLCD("KerbalController");
+      writeLCD(" KSP Controller ");
       writeLCD("idle...");
     }    
   }
@@ -131,12 +135,12 @@ byte ControlStatus(byte n)
   return ((VData.ActionGroups >> n) & 1) == 1;
 }
 
-//get the current SAS Mode. Can be compared to enum values, e.g. if(getSASMode() == SMPrograde){//do stuff}
+//get the current SAS Mode. Can be compared to enum values, e.g. if (getSASMode() == SMPrograde) {//do stuff}
 byte getSASMode() {
   return VData.NavballSASMode & B00001111; // leaves alone the lower 4 bits of; all higher bits set to 0.
 }
 
-//get the current navball mode. Can be compared to enum values, e.g. if (getNavballMode() == NAVBallTARGET){//do stuff}
+//get the current navball mode. Can be compared to enum values, e.g. if (getNavballMode() == NAVBallTARGET) {//do stuff}
 byte getNavballMode() {
   return VData.NavballSASMode >> 4; // leaves alone the higher 4 bits of; all lower bits set to 0.
 }
@@ -157,7 +161,7 @@ void define_vessel_data_display() {
   // 6 xYZ Landing Mode:     Radar Altitude / Vertical Velocity
   // 7 XYZ Extra Mode:       not implemented (yet)
 
-  if(digitalRead(pLCDx) && digitalRead(pLCDy) && digitalRead(pLCDz)){
+  if (digitalRead(pLCDx) && digitalRead(pLCDy) && digitalRead(pLCDz)) {
     //MODE 0 : TakeOff Mode
     //Vsurf
     clearLCD();
@@ -177,7 +181,7 @@ void define_vessel_data_display() {
     writeLCD(bufferGee);
   }
   
-  if(!digitalRead(pLCDx) && digitalRead(pLCDy) && digitalRead(pLCDz)){
+  if (!digitalRead(pLCDx) && digitalRead(pLCDy) && digitalRead(pLCDz)) {
     //MODE 1: Orbit Mode
     clearLCD();
     
@@ -225,7 +229,7 @@ void define_vessel_data_display() {
     writeLCD(bufferPE);
   }
 
-  if(digitalRead(pLCDx) && !digitalRead(pLCDy) && digitalRead(pLCDz)){
+  if (digitalRead(pLCDx) && !digitalRead(pLCDy) && digitalRead(pLCDz)) {
     //MODE 2: Maneuver Mode
     //MNTime
     clearLCD();
@@ -244,7 +248,7 @@ void define_vessel_data_display() {
     writeLCD(bufferMNDeltaV);
   }
 
-  if(!digitalRead(pLCDx) && !digitalRead(pLCDy) && digitalRead(pLCDz)){
+  if (!digitalRead(pLCDx) && !digitalRead(pLCDy) && digitalRead(pLCDz)) {
     //MODE 3: Rendezvouz Mode
     //Target Distance
     clearLCD();
@@ -264,7 +268,7 @@ void define_vessel_data_display() {
     writeLCD(bufferTargetV);
   }
 
-  if(digitalRead(pLCDx) && digitalRead(pLCDy) && !digitalRead(pLCDz)){
+  if (digitalRead(pLCDx) && digitalRead(pLCDy) && !digitalRead(pLCDz)) {
     //MODE 4: Re-Entry Mode
     //MaxOverHeat
     clearLCD();
@@ -283,7 +287,7 @@ void define_vessel_data_display() {
     writeLCD(bufferGee);
   }
 
-  if(!digitalRead(pLCDx) && digitalRead(pLCDy) && !digitalRead(pLCDz)){
+  if (!digitalRead(pLCDx) && digitalRead(pLCDy) && !digitalRead(pLCDz)) {
     //MODE 5: Flying Mode
     //Alt
     clearLCD();
@@ -302,7 +306,7 @@ void define_vessel_data_display() {
     writeLCD(bufferMachNumber);
   }
 
-  if(digitalRead(pLCDx) && !digitalRead(pLCDy) && !digitalRead(pLCDz)){
+  if (digitalRead(pLCDx) && !digitalRead(pLCDy) && !digitalRead(pLCDz)) {
     //MODE 6: Landing Mode
     //RAlt
     clearLCD();
@@ -322,7 +326,7 @@ void define_vessel_data_display() {
     writeLCD(bufferVVI);
   }
 
-  if(!digitalRead(pLCDx) && !digitalRead(pLCDy) && !digitalRead(pLCDz)){
+  if (!digitalRead(pLCDx) && !digitalRead(pLCDy) && !digitalRead(pLCDz)) {
     //MODE 7: Extra Mode
     clearLCD();
     writeLCD("KerbalController");
@@ -363,7 +367,7 @@ void define_vessel_data_display() {
   SF = constrain(map(vSF, 100, 0, 0, 9), 0, 9);
   LF = constrain(map(vLF, 100, 0, 0, 9), 0, 9);
   OX = constrain(map(vOX, 100, 0, 0, 9), 0, 9);
-  EL = constrain(map(vEL, 0, 100, 0, 9), 0, 9); //EL bar soldered wrong way around
+  EL = constrain(map(vEL, 100, 0, 0, 9), 0, 9);
   MP = constrain(map(vMP, 100, 0, 0, 9), 0, 9);
 
   //calculate the power of 2. Now each value in binary is all zeroes an a single 1. we can use that to light one LED in each LED bar (dot mode)
@@ -390,7 +394,7 @@ void define_vessel_data_display() {
   digitalWrite(latchPin, LOW);
 
   //loop through the input bytes
-  for (int j=0; j<=6; j++){
+  for (int j=0; j<=6; j++) {
     byte inputByte = inputBytes[j];
     Serial.println(inputByte);
     shiftOut(dataPin, clockPin, MSBFIRST, inputByte);
@@ -400,3 +404,7 @@ void define_vessel_data_display() {
   digitalWrite(latchPin, HIGH);  
   
 }
+
+// ----------------------
+//       END TO CHECK
+// ----------------------
